@@ -1,10 +1,16 @@
 module RedmineExpoPush
   class Notification
+    attr_reader :title, :body, :data
+
     def initialize(title: nil, body: nil, data: {})
       @title = title
       @body = body
       @data = data
       @recipients = []
+    end
+
+    def self.for(email)
+      new title: email.subject, body: email.text_part&.body&.decoded
     end
 
     def add_recipient(user)
@@ -18,7 +24,7 @@ module RedmineExpoPush
       messages = @recipients.map do |user|
         ExpoPushToken.where(user: user).map do |token|
           {
-            to: token,
+            to: token.token,
             title: @title,
             body: @body,
             data: @data
@@ -27,7 +33,11 @@ module RedmineExpoPush
       end
       messages.flatten!
 
-      Exponent::Push::Client.new(gzip: true).publish messages
+      begin
+        Exponent::Push::Client.new(gzip: true).publish messages
+      rescue Exception
+        Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
+      end
     end
   end
 end

@@ -1,5 +1,8 @@
 require 'redmine'
 
+require 'redmine_expo_push'
+require 'redmine_expo_push/hooks'
+
 Rails.configuration.to_prepare do
   RedmineExpoPush.setup
 end

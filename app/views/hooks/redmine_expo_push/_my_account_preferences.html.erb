@@ -1,0 +1,11 @@
+<p>
+  <%= labelled_fields_for :pref, @user.pref do |pref_fields| %>
+    <%= pref_fields.select :push_notifications, ['disabled', 'enabled', 'enabled_no_email'].map{|k| [t(".push_notifications.#{k}"), k]}, include_blank: false %>
+  <% end %>
+  <em class="info">
+    <% count = @user.expo_push_tokens.count %>
+    <%= t '.x_devices_registered', count: count %>
+    <%= link_to t(".delete#{'_all' if count > 1}"), expo_push_tokens_path(user_id: @user.id), confirm: t("text_are_you_sure"), method: :delete if count > 0 %>
+  </em>
+</p>
+

@@ -1,0 +1,14 @@
+en:
+  hooks:
+    redmine_expo_push:
+      my_account_preferences:
+        delete: Remove
+        delete_all: Remove all
+        push_notifications:
+          enabled: Enabled
+          disabled: Disabled
+          enabled_no_email: Enabled, no emails
+        x_devices_registered:
+          zero: Currently no devices are registered.
+          one: Currently one device is registered.
+          other: "Currently %{count} devices are registered."

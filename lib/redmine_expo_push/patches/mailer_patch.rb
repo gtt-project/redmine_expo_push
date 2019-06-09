@@ -1,7 +1,5 @@
 module RedmineExpoPush
   module Patches
-    # this is a draft, just in case we want to add general push notification
-    # support for all redmine notifications
     module MailerPatch
 
       def self.apply
@@ -22,13 +20,10 @@ module RedmineExpoPush
               skip_receivers = []
               receivers.each do |addr|
                 user = User.having_mail(addr).first
-                if user.present?
-                  cfg = RedmineExpoPush::UserConfig.new(user)
-                  if cfg.send_push_notifications?
-                    notification ||= Notification.new(mail)
-                    notification.add_recipient user
-                    skip_receivers << addr if cfg.skip_emails?
-                  end
+                if user.present? and user.send_push_notifications?
+                  notification ||= RedmineExpoPush::Notification.for(mail)
+                  notification.add_recipient user
+                  skip_receivers << addr if user.push_skip_emails?
                 end
               end
               mail.send "#{field}=", (receivers - skip_receivers)
