@@ -34,6 +34,19 @@ class ExpoPushTokensTest < Redmine::ApiTest::Base
     end
   end
 
+  test 'should not create same token twice' do
+    assert_difference "ExpoPushToken.count" do
+      post "/expo_push_tokens.json",
+        params: @payload,
+        headers: {"CONTENT_TYPE" => 'application/json'}.merge(@creds)
+      assert_response 201
+      post "/expo_push_tokens.json",
+        params: @payload,
+        headers: {"CONTENT_TYPE" => 'application/json'}.merge(@creds)
+      assert_response 422
+    end
+  end
+
   test 'should require token' do
     assert_no_difference "ExpoPushToken.count" do
       post "/expo_push_tokens.json",
@@ -79,7 +92,7 @@ class ExpoPushTokensTest < Redmine::ApiTest::Base
     assert_difference "ExpoPushToken.count", -1 do
       delete "/expo_push_tokens", params: { user_id: @jsmith.id }
     end
-    assert_redirected_to "/users/#{@jsmith.id}"
+    assert_redirected_to "/users/#{@jsmith.id}/edit"
 
     assert_raise ActiveRecord::RecordNotFound do
       @t2.reload
