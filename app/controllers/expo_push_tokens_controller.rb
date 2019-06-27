@@ -3,7 +3,7 @@ class ExpoPushTokensController < ApplicationController
   accept_api_auth :create, :destroy_all
 
   def create
-    @token = ExpoPushToken.new user: User.current, token: params[:token]
+    @token = ExpoPushToken.new user: User.find(params[:user_id]), token: params[:token]
     if @token.save
       respond_to do |format|
         format.api { head :created }
