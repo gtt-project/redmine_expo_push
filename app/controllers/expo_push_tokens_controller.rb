@@ -3,7 +3,8 @@ class ExpoPushTokensController < ApplicationController
   accept_api_auth :create, :destroy_all
 
   def create
-    @token = ExpoPushToken.new user: User.current, token: params[:token]
+    user_id = user_id_from_params_or_current
+    @token = ExpoPushToken.new user_id: user_id, token: params[:token]
     if @token.save
       respond_to do |format|
         format.api { head :created }
@@ -16,8 +17,7 @@ class ExpoPushTokensController < ApplicationController
   end
 
   def destroy_all
-    user_id = params[:user_id].to_i if User.current.admin? and params[:user_id].present?
-    user_id ||= User.current.id
+    user_id = user_id_from_params_or_current
     ExpoPushToken.where(user_id: user_id).delete_all
     respond_to do |format|
       format.api { head :ok }
@@ -28,5 +28,12 @@ class ExpoPushTokensController < ApplicationController
           my_account_path
       }
     end
+  end
+
+  private
+
+  def user_id_from_params_or_current
+    user_id = params[:user_id].to_i if User.current.admin? and params[:user_id].present?
+    return user_id || User.current.id
   end
 end

@@ -8,8 +8,14 @@ class ExpoPushTokensTest < Redmine::ApiTest::Base
     @jsmith = User.find_by_login 'jsmith'
 
     @creds = { 'X-Redmine-API-Key' => @user.api_key }
+    @jsmith_creds = { 'X-Redmine-API-Key' => @jsmith.api_key }
+    @admin_creds = { 'X-Redmine-API-Key' => User.find_by_login('admin').api_key }
     @payload = <<-JSON
     { "token": "asdf1234" }
+    JSON
+
+    @user_id_payload = <<-JSON
+    { "token": "asdf1234", "user_id": "#{@user.id}" }
     JSON
 
     @t1 = ExpoPushToken.create! user: @user, token: "asdf.1234"
@@ -99,4 +105,26 @@ class ExpoPushTokensTest < Redmine::ApiTest::Base
     end
     @t1.reload
   end
+
+
+  test 'admin should be able to create token with optional user id' do
+    assert_difference "ExpoPushToken.count" do
+      post "/expo_push_tokens.json",
+        params: @user_id_payload,
+        headers: {"CONTENT_TYPE" => 'application/json'}.merge(@admin_creds)
+      assert_response 201
+    end
+    assert_equal @user.id, ExpoPushToken.last.user_id
+  end
+
+  test 'non-admin should not able to create token with optional user id' do
+    assert_difference "ExpoPushToken.count" do
+      post "/expo_push_tokens.json",
+        params: @user_id_payload,
+        headers: {"CONTENT_TYPE" => 'application/json'}.merge(@jsmith_creds)
+      assert_response 201
+    end
+    assert_equal @jsmith.id, ExpoPushToken.last.user_id
+  end
+
 end
