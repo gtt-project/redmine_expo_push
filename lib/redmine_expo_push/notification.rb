@@ -10,7 +10,7 @@ module RedmineExpoPush
     end
 
     def self.for(email)
-      new title: email.subject, body: email.text_part&.body&.decoded
+      new title: email.subject, body: email.text_part&.body&.decoded, data: {"message": email.text_part&.body&.decoded}
     end
 
     def add_recipient(user)
