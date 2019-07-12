@@ -10,7 +10,14 @@ module RedmineExpoPush
     end
 
     def self.for(email)
-      new title: email.subject, body: email.text_part&.body&.decoded
+      if /\[(.*\]) News:/.match?(email.subject)
+       body = "We have news for you"
+      elsif /\[(.*\]) お知らせ:/.match?(email.subject)
+        body=  "テーマレポートを作成しました。更新を確認してください。"
+      else
+        body=  email.text_part&.body&.decoded
+      end
+      new title: email.subject, body: body
     end
 
     def add_recipient(user)
