@@ -7,6 +7,42 @@ module RedmineExpoPush
           class << self
             prepend ClassMethods
           end
+
+          def news_added(user, news)
+            redmine_headers 'Project' => news.project.identifier
+            @author = news.author
+            message_id news
+            references news
+            @news = news
+            @news_url = url_for(:controller => 'news', :action => 'show', :id => news)
+            mail :to => user,
+              :subject => "#{news.title}"
+          end
+
+          def issue_edit(user, journal)
+            if journal.new_value_for('status_id')
+              issue = journal.journalized
+              redmine_headers 'Project' => issue.project.identifier,
+                              'Issue-Id' => issue.id,
+                              'Issue-Author' => issue.author.login
+              redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
+              message_id journal
+              references issue
+              @author = journal.user
+              s = "[#{issue.project.name} - #{issue.tracker.name} ##{issue.id}] "
+              s << "(#{issue.status.name}) " if journal.new_value_for('status_id')
+              s << issue.subject
+              @issue = issue
+              @user = user
+              @journal = journal
+              @journal_details = journal.visible_details
+              @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue, :anchor => "change-#{journal.id}")
+              mail :to => user,
+                :subject => "レポート：[ #{issue.subject} ] の対応状況が更新されました"
+            else
+              super
+            end
+          end
         end
       end
 
