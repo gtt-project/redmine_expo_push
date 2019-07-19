@@ -13,11 +13,7 @@ module RedmineExpoPush
       end
 
       def push_notifications
-        if user.push_device_registered?
-          self[:push_notifications] || "enabled_no_email"
-        else
-          "disabled"
-        end
+        self[:push_notifications] || "enabled_no_email"
       end
 
       def push_notifications=(new_value)

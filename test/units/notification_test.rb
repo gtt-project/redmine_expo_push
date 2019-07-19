@@ -17,16 +17,22 @@ class NotificationTest < ActiveSupport::TestCase
     assert_match(/released/, n.body)
   end
 
-  test "should send notification instead of email" do
+  test "should send notification instead of email when token present" do
     Exponent::Push::Client.any_instance.expects(:publish)
 
-    # no token, email is sent
+    assert_equal 'enabled_no_email', @user.pref.push_notifications
+    assert @user.send_push_notifications?
+    refute @user.push_skip_emails?
+
+    # no token, email is still sent
     mail = Mailer.news_added @user, @news
     mail.deliver
     assert_equal 1, @emails.size
 
     @emails.clear
     @user.expo_push_tokens.create! token: "foo"
+    assert @user.send_push_notifications?
+    assert @user.push_skip_emails?
 
     # token is set, push notification but no email is sent
     mail = Mailer.news_added @user, @news

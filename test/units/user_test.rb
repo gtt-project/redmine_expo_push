@@ -7,8 +7,8 @@ class UserTest < ActiveSupport::TestCase
     @user = User.find_by_login "jsmith"
   end
 
-  test "should default to no push notifs" do
-    refute @user.send_push_notifications?
+  test "should not skip emails when no tokens present" do
+    assert @user.send_push_notifications?
     refute @user.push_skip_emails?
   end
 

@@ -21,7 +21,8 @@ module RedmineExpoPush
       end
 
       def push_skip_emails?
-        pref.push_notifications == "enabled_no_email"
+        # only skip emails when at least one device is registered
+        pref.push_notifications == "enabled_no_email" and push_device_registered?
       end
 
       def remove_references_before_destroy

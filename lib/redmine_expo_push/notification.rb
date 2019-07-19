@@ -33,10 +33,12 @@ module RedmineExpoPush
       end
       messages.flatten!
 
-      begin
-        Exponent::Push::Client.new(gzip: true).publish messages
-      rescue Exception
-        Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
+      if messages.any?
+        begin
+          Exponent::Push::Client.new(gzip: true).publish messages
+        rescue Exception
+          Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
+        end
       end
     end
   end
