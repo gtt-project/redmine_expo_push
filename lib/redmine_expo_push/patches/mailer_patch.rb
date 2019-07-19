@@ -3,46 +3,35 @@ module RedmineExpoPush
     module MailerPatch
 
       def self.apply
-        Mailer.class_eval do
-          class << self
-            prepend ClassMethods
-          end
-
-          def news_added(user, news)
-            redmine_headers 'Project' => news.project.identifier
-            @author = news.author
-            message_id news
-            references news
-            @news = news
-            @news_url = url_for(:controller => 'news', :action => 'show', :id => news)
-            mail :to => user,
-              :subject => "#{news.title}"
-          end
-
-          def issue_edit(user, journal)
-            if journal.new_value_for('status_id')
-              issue = journal.journalized
-              redmine_headers 'Project' => issue.project.identifier,
-                              'Issue-Id' => issue.id,
-                              'Issue-Author' => issue.author.login
-              redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
-              message_id journal
-              references issue
-              @author = journal.user
-              s = "[#{issue.project.name} - #{issue.tracker.name} ##{issue.id}] "
-              s << "(#{issue.status.name}) " if journal.new_value_for('status_id')
-              s << issue.subject
-              @issue = issue
-              @user = user
-              @journal = journal
-              @journal_details = journal.visible_details
-              @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue, :anchor => "change-#{journal.id}")
-              mail :to => user,
-                :subject => "レポート：[ #{issue.subject} ] の対応状況が更新されました"
-            else
-              super
+        unless Mailer < InstanceMethods
+          Mailer.prepend InstanceMethods
+          Mailer.class_eval do
+            class << self
+              prepend ClassMethods
             end
           end
+        end
+      end
+
+      module InstanceMethods
+        def mail(headers={}, &block)
+          if @expo_push_override_subject
+            headers[:subject] = @expo_push_override_subject
+          end
+          super
+        end
+
+        def news_added(user, news)
+          @expo_push_override_subject = news.title
+          super
+        end
+
+        def issue_edit(user, journal)
+          if journal.new_value_for('status_id')
+            # TODO move static text to locale files?
+            @expo_push_override_subject = "レポート：[ #{journal.journalized.subject} ] の対応状況が更新されました"
+          end
+          super
         end
       end
 
