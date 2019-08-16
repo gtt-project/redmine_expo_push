@@ -21,6 +21,9 @@ module RedmineExpoPush
               receivers.each do |addr|
                 user = User.having_mail(addr).first
                 if user.present? and user.send_push_notifications?
+                  if mail.subject == l(:mail_subject_lost_password, Setting.app_title)
+                    next
+                  end
                   notification ||= RedmineExpoPush::Notification.for(mail)
                   notification.add_recipient user
                   skip_receivers << addr if user.push_skip_emails?
