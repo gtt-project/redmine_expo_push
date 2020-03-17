@@ -25,7 +25,7 @@ module RedmineExpoPush
                     next
                   end
                   notification ||= RedmineExpoPush::Notification.for(mail)
-                  notification.add_recipient user
+                  notification.add_recipient user if user.push_device_registered?
                   skip_receivers << addr if user.push_skip_emails?
                 end
               end
