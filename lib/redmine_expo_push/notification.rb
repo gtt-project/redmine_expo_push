@@ -6,6 +6,7 @@ module RedmineExpoPush
       @title = title
       @body = body
       @data = data
+      @displayInForeground: true
       @recipients = []
     end
 
@@ -17,7 +18,7 @@ module RedmineExpoPush
       @recipients << user
     end
 
-    # https://docs.expo.io/versions/latest/guides/push-notifications/
+    # https://docs.expo.io/guides/push-notifications/
     # https://github.com/expo/expo-server-sdk-ruby
     # https://docs.expo.io/versions/latest/guides/push-notifications/#message-format
     def deliver
@@ -27,7 +28,8 @@ module RedmineExpoPush
             to: token.token,
             title: @title,
             body: @body,
-            data: @data
+            data: @data,
+            _displayInForeground: @displayInForeground
           }
         end
       end
