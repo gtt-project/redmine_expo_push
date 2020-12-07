@@ -35,7 +35,7 @@ module RedmineExpoPush
 
       if messages.any?
         begin
-          Exponent::Push::Client.new(gzip: true).publish messages
+          Exponent::Push::Client.new(gzip: true).send_messages messages
         rescue Exception
           Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
         end
