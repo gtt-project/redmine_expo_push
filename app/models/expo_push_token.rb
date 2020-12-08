@@ -10,6 +10,6 @@ class ExpoPushToken < ActiveRecord::Base
   private
 
   def remove_other_experiences
-    ExpoPushToken.where('user=? AND experience_id!=?', self.user, self.experience_id).delete_all
+    ExpoPushToken.where('user_id=? AND experience_id IS NULL OR experience_id!=?', self.user.id, self.experience_id).delete_all
   end
 end
