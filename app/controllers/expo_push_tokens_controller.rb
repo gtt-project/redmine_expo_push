@@ -4,7 +4,7 @@ class ExpoPushTokensController < ApplicationController
 
   def create
     user_id = user_id_from_params_or_current
-    @token = ExpoPushToken.new user_id: user_id, token: params[:token]
+    @token = ExpoPushToken.new user_id: user_id, token: params[:token], experience_id: params[:experience_id]
     if @token.save
       respond_to do |format|
         format.api { head :created }
