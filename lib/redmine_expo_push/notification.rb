@@ -17,9 +17,9 @@ module RedmineExpoPush
       @recipients << user
     end
 
-    # https://docs.expo.io/versions/latest/guides/push-notifications/
+    # https://docs.expo.io/push-notifications/sending-notifications/
     # https://github.com/expo/expo-server-sdk-ruby
-    # https://docs.expo.io/versions/latest/guides/push-notifications/#message-format
+    # https://docs.expo.io/push-notifications/sending-notifications/#message-request-format
     def deliver
       messages = @recipients.map do |user|
         ExpoPushToken.where(user: user).map do |token|
@@ -34,11 +34,19 @@ module RedmineExpoPush
       messages.flatten!
 
       if messages.any?
-        begin
-          Exponent::Push::Client.new(gzip: true).send_messages messages
-        rescue Exception
-          Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
-        end
+        messages.each_slice(100) {|message_list|
+          begin
+            handler = Exponent::Push::Client.new(gzip: true).send_messages message_list
+            if handler.errors.present?
+              Rails.logger.error "handler.errors:#{handler.errors}"
+            end
+            if handler.receipt_ids.present?
+              Rails.logger.info "handler.receipt_ids:#{handler.receipt_ids}"
+            end
+          rescue Exception
+            Rails.logger.error "error sending push notifications:\n#{$!}\n" + $!.backtrace.join("\n")
+          end
+        }
       end
     end
   end
