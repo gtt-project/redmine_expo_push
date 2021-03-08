@@ -12,3 +12,5 @@ en:
           zero: Currently no devices are registered.
           one: Currently one device is registered.
           other: "Currently %{count} devices are registered."
+  field_push_notifications: Push notifications
+  label_expo_push_experience_id: Expo Experience ID
