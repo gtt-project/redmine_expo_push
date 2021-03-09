@@ -7,7 +7,7 @@ ja:
         push_notifications:
           enabled: 有効
           disabled: 無効
-          enabled_no_email: 無効・メールなし
+          enabled_no_email: 有効・メールなし
         x_devices_registered:
           zero: 現在、デバイスは登録されていません。
           one: 現在、1台のデバイスが登録されています。
