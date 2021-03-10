@@ -1,0 +1,16 @@
+ja:
+  hooks:
+    redmine_expo_push:
+      my_account_preferences:
+        delete: 削除
+        delete_all: すべて削除
+        push_notifications:
+          enabled: 有効
+          disabled: 無効
+          enabled_no_email: 有効・メールなし
+        x_devices_registered:
+          zero: 現在、デバイスは登録されていません。
+          one: 現在、1台のデバイスが登録されています。
+          other: "現在、%{count}台のデバイスが登録されています。"
+  field_push_notifications: Push通知
+  label_expo_push_experience_id: Expo Experience ID
