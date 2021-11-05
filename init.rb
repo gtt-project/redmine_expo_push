@@ -10,9 +10,10 @@ end
 Redmine::Plugin.register :redmine_expo_push do
   name 'Redmine Expo Push Notifications Plugin'
   author 'Jens Krämer, Georepublic'
-  author_url 'https://hub.georepublic.net/gtt/redmine_expo_push'
+  author_url 'https://github.com/georepublic'
+  url 'https://github.com/gtt-project/redmine_expo_push'
   description 'Notify mobile app users through push notifications'
-  version '1.0.0'
+  version '1.1.0'
 
   requires_redmine version_or_higher: '4.0.0'
 
