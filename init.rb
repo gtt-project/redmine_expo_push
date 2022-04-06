@@ -1,10 +1,14 @@
-require 'redmine'
+require File.expand_path('../lib/redmine_expo_push/hooks', __FILE__)
 
-require 'redmine_expo_push'
-require 'redmine_expo_push/hooks'
-
-Rails.configuration.to_prepare do
-  RedmineExpoPush.setup
+if Rails.version > '6.0' && Rails.autoloaders.zeitwerk_enabled?
+  Rails.application.config.after_initialize do
+    RedmineExpoPush.setup
+  end
+else
+  require 'redmine_expo_push'
+  Rails.configuration.to_prepare do
+    RedmineExpoPush.setup
+  end
 end
 
 Redmine::Plugin.register :redmine_expo_push do
