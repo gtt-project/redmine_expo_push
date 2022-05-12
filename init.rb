@@ -17,7 +17,7 @@ Redmine::Plugin.register :redmine_expo_push do
   author_url 'https://github.com/georepublic'
   url 'https://github.com/gtt-project/redmine_expo_push'
   description 'Notify mobile app users through push notifications'
-  version '1.1.0'
+  version '2.0.0'
 
   requires_redmine version_or_higher: '4.0.0'
 
