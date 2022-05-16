@@ -1,10 +1,14 @@
-require 'redmine'
+require File.expand_path('../lib/redmine_expo_push/hooks', __FILE__)
 
-require 'redmine_expo_push'
-require 'redmine_expo_push/hooks'
-
-Rails.configuration.to_prepare do
-  RedmineExpoPush.setup
+if Rails.version > '6.0' && Rails.autoloaders.zeitwerk_enabled?
+  Rails.application.config.after_initialize do
+    RedmineExpoPush.setup
+  end
+else
+  require 'redmine_expo_push'
+  Rails.configuration.to_prepare do
+    RedmineExpoPush.setup
+  end
 end
 
 Redmine::Plugin.register :redmine_expo_push do
@@ -13,7 +17,7 @@ Redmine::Plugin.register :redmine_expo_push do
   author_url 'https://github.com/georepublic'
   url 'https://github.com/gtt-project/redmine_expo_push'
   description 'Notify mobile app users through push notifications'
-  version '1.1.0'
+  version '2.0.0'
 
   requires_redmine version_or_higher: '4.0.0'
 

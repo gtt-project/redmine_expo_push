@@ -36,6 +36,9 @@ The GTT Project appreciates any [contributions](https://github.com/gtt-project/.
 
 ## Version History
 
+- 2.0.0 Support Redmine 5.0
+- 1.1.0 Publish on GitHub
+
 See [all releases](https://github.com/gtt-project/redmine_expo_push/releases) with release notes.
 
 ## Authors
@@ -43,6 +46,7 @@ See [all releases](https://github.com/gtt-project/redmine_expo_push/releases) wi
 - [Jens Kraemer](https://github.com/jkraemer)
 - [Thibault Mutabazi](https://github.com/eyewritecode)
 - [Ko Nagase](https://github.com/sanak)
+- [Daniel Kastl](https://github.com/dkastl)
 - ... [and others](https://github.com/gtt-project/redmine_expo_push/graphs/contributors)
 
 ## LICENSE
