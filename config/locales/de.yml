@@ -8,5 +8,8 @@ de:
           enabled: Aktiviert
           disabled: Deaktiviert
           enabled_no_email: Aktiviert, keine E-Mails
+        x_devices_registered:
+          one: Derzeit sind keine Geräte registriert.
+          other: Derzeit sind %{count} Geräte registriert.
   field_push_notifications: Push-Nachrichten
   label_expo_push_experience_id: Expo Experience ID
