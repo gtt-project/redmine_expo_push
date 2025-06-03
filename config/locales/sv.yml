@@ -1,1 +1,14 @@
-{}
+hooks:
+  redmine_expo_push:
+    my_account_preferences:
+      delete_all: Ta bort alla
+      push_notifications:
+        enabled: Aktiverad
+        disabled: Inaktiverad
+        enabled_no_email: Aktiverad, inga e-postmeddelanden
+      delete: Ta bort
+      x_devices_registered:
+        one: För närvarande är ingen enhet registrerade.
+        other: För närvarande är inga enheter registrerade.
+field_push_notifications: Pushmeddelanden
+label_expo_push_experience_id: ID för Expo-upplevelse
